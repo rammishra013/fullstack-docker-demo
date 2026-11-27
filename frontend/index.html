@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Docker Full-Stack Test</title>
+</head>
+<body style="font-family: sans-serif; max-width: 500px; margin: 40px auto;">
+  <h2>Full-Stack Docker + PostgreSQL Test</h2>
+  <input id="itemInput" type="text" placeholder="Enter item name..." />
+  <button onclick="addItem()">Add Item</button>
+  <ul id="itemList"></ul>
+
+  <script>
+    const API_URL = '/api/items';
+
+    async function loadItems() {
+      const res = await fetch(API_URL);
+      const items = await res.json();
+      document.getElementById('itemList').innerHTML = items
+        .map(item => `<li>${item.name}</li>`)
+        .join('');
+    }
+
+    async function addItem() {
+      const input = document.getElementById('itemInput');
+      if (!input.value) return;
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: input.value })
+      });
+      input.value = '';
+      loadItems();
+    }
+
+    loadItems();
+  </script>
+</body>
+</html>

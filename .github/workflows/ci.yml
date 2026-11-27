@@ -68,7 +68,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/sample-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/sample-frontend:${{ github.sha }}
 
-deploy:
+  deploy:
     name: Deploy to Azure VM
     needs: build-test-and-push
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

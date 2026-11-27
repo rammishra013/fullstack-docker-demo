@@ -21,7 +21,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: rammishra013/sample-backend:latest
+    image: rammishra013/sample-backend:${IMAGE_TAG:-latest}
     container_name: sample_backend
     restart: unless-stopped
     environment:
@@ -45,7 +45,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: rammishra013/sample-frontend:latest
+    image: rammishra013/sample-frontend:${IMAGE_TAG:-latest}
     container_name: sample_frontend
     restart: unless-stopped
     ports:

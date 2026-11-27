@@ -77,16 +77,21 @@ jobs:
     steps:
       - name: Deploy specific commit SHA via SSH
         uses: appleboy/ssh-action@v1.2.0
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
           host: ${{ secrets.AZURE_VM_HOST }}
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_VM_SSH_KEY }}
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN
           script: |
             set -e
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             cd ~/projects/fullstack-docker-demo
             sed -i '/^IMAGE_TAG=/d' .env
             echo "IMAGE_TAG=${{ github.sha }}" >> .env
             docker-compose pull backend frontend
+            docker-compose down
             docker-compose up -d
             docker image prune -f
-

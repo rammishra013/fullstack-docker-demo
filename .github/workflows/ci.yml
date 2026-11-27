@@ -86,7 +86,7 @@ jobs:
             cd ~/projects/fullstack-docker-demo
             sed -i '/^IMAGE_TAG=/d' .env
             echo "IMAGE_TAG=${{ github.sha }}" >> .env
-            docker compose pull backend frontend
-            docker compose up -d
+            docker-compose pull backend frontend
+            docker-compose up -d
             docker image prune -f
 

@@ -82,9 +82,11 @@ jobs:
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_VM_SSH_KEY }}
           script: |
+            set -e
             cd ~/projects/fullstack-docker-demo
             sed -i '/^IMAGE_TAG=/d' .env
             echo "IMAGE_TAG=${{ github.sha }}" >> .env
             docker compose pull backend frontend
             docker compose up -d
             docker image prune -f
+

@@ -8,19 +8,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - pg_data:/var/lib/postgresql/data  # Step 7: Persistent volume
+      - pg_data:/var/lib/postgresql/data
     networks:
-      - app_network                        # Step 6: Custom network
-    healthcheck:                           # Step 9: DB Health check
+      - app_network
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     image: rammishra013/sample-backend:${IMAGE_TAG:-latest}
     container_name: sample_backend
     restart: unless-stopped
@@ -32,19 +29,16 @@ services:
       PORT: ${BACKEND_PORT}
     depends_on:
       db:
-        condition: service_healthy         # Waits for Postgres health check
+        condition: service_healthy
     networks:
       - app_network
-    healthcheck:                           # Step 9: Backend Health check
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/health"]
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0"]
       interval: 15s
       timeout: 5s
       retries: 3
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     image: rammishra013/sample-frontend:${IMAGE_TAG:-latest}
     container_name: sample_frontend
     restart: unless-stopped
@@ -55,8 +49,8 @@ services:
         condition: service_healthy
     networks:
       - app_network
-    healthcheck:                           # Step 9: Frontend Health check
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80"]
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:80"]
       interval: 15s
       timeout: 5s
       retries: 3
